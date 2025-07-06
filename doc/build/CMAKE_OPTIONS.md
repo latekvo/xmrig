@@ -33,7 +33,7 @@ This feature add external dependency to libhwloc (1.10.0+) (except MSVC builds).
 ## Special build options
 
 * **`-DXMRIG_DEPS=<path>`** path to precompiled dependencies https://github.com/xmrig/xmrig-deps
-* **`-DARM_TARGET=<number>`** override ARM target, possible values `7` (ARMv7) and `8` (ARMv8).
+* **`-DARM_TARGET=<number>`** override ARM target, possible values `6` (ARMv6), `7` (ARMv7) and `8` (ARMv8).
 * **`-DUV_INCLUDE_DIR=<path>`** custom path to libuv headers.
 * **`-DUV_LIBRARY=<path>`** custom path to libuv library.
 * **`-DHWLOC_INCLUDE_DIR=<path>`** custom path to hwloc headers.
