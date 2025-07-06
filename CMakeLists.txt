@@ -72,7 +72,7 @@ set(HEADERS
     src/version.h
    )
 
-if (XMRIG_ARM and ARM_TARGET EQUAL 6)
+if (XMRIG_ARM AND (ARM_TARGET EQUAL 6))
     # todo: Conditionally append to HEADERS_CRYPTO instead of this if-else approach
     set(HEADERS_CRYPTO
         src/backend/common/interfaces/IMemoryPool.h
@@ -108,10 +108,12 @@ else()
     )
 endif()
 
-if (XMRIG_ARM and ARM_TARGET EQUAL 6)
-    set(HEADERS_CRYPTO "${HEADERS_CRYPTO}")
-elseif (XMRIG_ARM)
-    set(HEADERS_CRYPTO "${HEADERS_CRYPTO}" src/crypto/cn/CryptoNight_arm.h)
+if (XMRIG_ARM)
+    if (ARM_TARGET GREATER 6)
+        set(HEADERS_CRYPTO "${HEADERS_CRYPTO}" src/crypto/cn/CryptoNight_arm.h)
+    else()
+        set(HEADERS_CRYPTO "${HEADERS_CRYPTO}")
+    endif()
 else()
     set(HEADERS_CRYPTO "${HEADERS_CRYPTO}" src/crypto/cn/CryptoNight_x86.h)
 endif()
@@ -133,7 +135,7 @@ set(SOURCES
     src/xmrig.cpp
    )
 
-if (XMRIG_ARM and ARM_TARGET EQUAL 6)
+if (XMRIG_ARM AND (ARM_TARGET EQUAL 6))
     # todo: Conditionally append to SOURCES_CRYPTO instead of this if-else approach
     set(SOURCES_CRYPTO
         src/crypto/common/HugePagesInfo.cpp
@@ -156,11 +158,11 @@ else()
     )
 endif()
 
-if (CMAKE_C_COMPILER_ID MATCHES GNU and (NOT XMRIG_ARM OR NOT ARM_TARGET EQUAL 6))
+if (CMAKE_C_COMPILER_ID MATCHES GNU AND (NOT XMRIG_ARM OR NOT ARM_TARGET EQUAL 6))
     set_source_files_properties(src/crypto/cn/CnHash.cpp PROPERTIES COMPILE_FLAGS "-Ofast -fno-tree-vectorize")
 endif()
 
-if (WITH_VAES and (NOT XMRIG_ARM OR NOT ARM_TARGET EQUAL 6))
+if (WITH_VAES AND (NOT XMRIG_ARM OR NOT (ARM_TARGET EQUAL 6)))
     add_definitions(-DXMRIG_VAES)
     set(HEADERS_CRYPTO "${HEADERS_CRYPTO}" src/crypto/cn/CryptoNight_x86_vaes.h)
     set(SOURCES_CRYPTO "${SOURCES_CRYPTO}" src/crypto/cn/CryptoNight_x86_vaes.cpp)
@@ -230,7 +232,7 @@ include(cmake/ghostrider.cmake)
 include(cmake/OpenSSL.cmake)
 include(cmake/asm.cmake)
 
-if (NOT XMRIG_ARM OR NOT ARM_TARGET EQUAL 6)
+if (NOT XMRIG_ARM OR (NOT ARM_TARGET EQUAL 6))
     if (WITH_CN_LITE)
         add_definitions(/DXMRIG_ALGO_CN_LITE)
     endif()
