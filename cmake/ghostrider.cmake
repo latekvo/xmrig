@@ -1,4 +1,4 @@
-if (WITH_GHOSTRIDER)
+if (WITH_GHOSTRIDER AND (NOT DEFINED ARM_TARGET OR NOT ARM_TARGET EQUAL 6))
     add_definitions(/DXMRIG_ALGO_GHOSTRIDER)
     add_subdirectory(src/crypto/ghostrider)
     set(GHOSTRIDER_LIBRARY ghostrider)
