@@ -35,8 +35,10 @@ xmrig::BasicCpuInfo::BasicCpuInfo() :
 
 #   if (XMRIG_ARM == 8)
     memcpy(m_brand, "ARMv8", 5);
-#   else
+#   elif (XMRIG_ARM == 7)
     memcpy(m_brand, "ARMv7", 5);
+#   else
+    memcpy(m_brand, "ARMv6", 5);
 #   endif
 
     init_arm();
