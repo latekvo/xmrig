@@ -72,31 +72,45 @@ set(HEADERS
     src/version.h
    )
 
-set(HEADERS_CRYPTO
-    src/backend/common/interfaces/IMemoryPool.h
-    src/crypto/cn/asm/CryptonightR_template.h
-    src/crypto/cn/c_blake256.h
-    src/crypto/cn/c_groestl.h
-    src/crypto/cn/c_jh.h
-    src/crypto/cn/c_skein.h
-    src/crypto/cn/CnAlgo.h
-    src/crypto/cn/CnCtx.h
-    src/crypto/cn/CnHash.h
-    src/crypto/cn/CryptoNight_monero.h
-    src/crypto/cn/CryptoNight_test.h
-    src/crypto/cn/CryptoNight.h
-    src/crypto/cn/groestl_tables.h
-    src/crypto/cn/hash.h
-    src/crypto/cn/skein_port.h
-    src/crypto/cn/soft_aes.h
-    src/crypto/common/HugePagesInfo.h
-    src/crypto/common/MemoryPool.h
-    src/crypto/common/Nonce.h
-    src/crypto/common/portable/mm_malloc.h
-    src/crypto/common/VirtualMemory.h
-   )
+if (XMRIG_ARM and ARM_TARGET EQUAL 6)
+    # todo: Conditionally append to HEADERS_CRYPTO instead of this if-else approach
+    set(HEADERS_CRYPTO
+        src/backend/common/interfaces/IMemoryPool.h
+        src/crypto/common/HugePagesInfo.h
+        src/crypto/common/MemoryPool.h
+        src/crypto/common/Nonce.h
+        src/crypto/common/portable/mm_malloc.h
+        src/crypto/common/VirtualMemory.h
+    )
+else()
+    set(HEADERS_CRYPTO
+        src/backend/common/interfaces/IMemoryPool.h
+        src/crypto/cn/asm/CryptonightR_template.h
+        src/crypto/cn/c_blake256.h
+        src/crypto/cn/c_groestl.h
+        src/crypto/cn/c_jh.h
+        src/crypto/cn/c_skein.h
+        src/crypto/cn/CnAlgo.h
+        src/crypto/cn/CnCtx.h
+        src/crypto/cn/CnHash.h
+        src/crypto/cn/CryptoNight_monero.h
+        src/crypto/cn/CryptoNight_test.h
+        src/crypto/cn/CryptoNight.h
+        src/crypto/cn/groestl_tables.h
+        src/crypto/cn/hash.h
+        src/crypto/cn/skein_port.h
+        src/crypto/cn/soft_aes.h
+        src/crypto/common/HugePagesInfo.h
+        src/crypto/common/MemoryPool.h
+        src/crypto/common/Nonce.h
+        src/crypto/common/portable/mm_malloc.h
+        src/crypto/common/VirtualMemory.h
+    )
+endif()
 
-if (XMRIG_ARM)
+if (XMRIG_ARM and ARM_TARGET EQUAL 6)
+    set(HEADERS_CRYPTO "${HEADERS_CRYPTO}")
+elseif (XMRIG_ARM)
     set(HEADERS_CRYPTO "${HEADERS_CRYPTO}" src/crypto/cn/CryptoNight_arm.h)
 else()
     set(HEADERS_CRYPTO "${HEADERS_CRYPTO}" src/crypto/cn/CryptoNight_x86.h)
@@ -119,24 +133,34 @@ set(SOURCES
     src/xmrig.cpp
    )
 
-set(SOURCES_CRYPTO
-    src/crypto/cn/c_blake256.c
-    src/crypto/cn/c_groestl.c
-    src/crypto/cn/c_jh.c
-    src/crypto/cn/c_skein.c
-    src/crypto/cn/CnCtx.cpp
-    src/crypto/cn/CnHash.cpp
-    src/crypto/common/HugePagesInfo.cpp
-    src/crypto/common/MemoryPool.cpp
-    src/crypto/common/Nonce.cpp
-    src/crypto/common/VirtualMemory.cpp
-   )
+if (XMRIG_ARM and ARM_TARGET EQUAL 6)
+    # todo: Conditionally append to SOURCES_CRYPTO instead of this if-else approach
+    set(SOURCES_CRYPTO
+        src/crypto/common/HugePagesInfo.cpp
+        src/crypto/common/MemoryPool.cpp
+        src/crypto/common/Nonce.cpp
+        src/crypto/common/VirtualMemory.cpp
+    )
+else()
+    set(SOURCES_CRYPTO
+        src/crypto/cn/c_blake256.c
+        src/crypto/cn/c_groestl.c
+        src/crypto/cn/c_jh.c
+        src/crypto/cn/c_skein.c
+        src/crypto/cn/CnCtx.cpp
+        src/crypto/cn/CnHash.cpp
+        src/crypto/common/HugePagesInfo.cpp
+        src/crypto/common/MemoryPool.cpp
+        src/crypto/common/Nonce.cpp
+        src/crypto/common/VirtualMemory.cpp
+    )
+endif()
 
-if (CMAKE_C_COMPILER_ID MATCHES GNU)
+if (CMAKE_C_COMPILER_ID MATCHES GNU and (NOT XMRIG_ARM OR NOT ARM_TARGET EQUAL 6))
     set_source_files_properties(src/crypto/cn/CnHash.cpp PROPERTIES COMPILE_FLAGS "-Ofast -fno-tree-vectorize")
 endif()
 
-if (WITH_VAES)
+if (WITH_VAES and (NOT XMRIG_ARM OR NOT ARM_TARGET EQUAL 6))
     add_definitions(-DXMRIG_VAES)
     set(HEADERS_CRYPTO "${HEADERS_CRYPTO}" src/crypto/cn/CryptoNight_x86_vaes.h)
     set(SOURCES_CRYPTO "${SOURCES_CRYPTO}" src/crypto/cn/CryptoNight_x86_vaes.cpp)
@@ -206,24 +230,26 @@ include(cmake/ghostrider.cmake)
 include(cmake/OpenSSL.cmake)
 include(cmake/asm.cmake)
 
-if (WITH_CN_LITE)
-    add_definitions(/DXMRIG_ALGO_CN_LITE)
-endif()
+if (NOT XMRIG_ARM OR NOT ARM_TARGET EQUAL 6)
+    if (WITH_CN_LITE)
+        add_definitions(/DXMRIG_ALGO_CN_LITE)
+    endif()
 
-if (WITH_CN_HEAVY)
-    add_definitions(/DXMRIG_ALGO_CN_HEAVY)
-endif()
+    if (WITH_CN_HEAVY)
+        add_definitions(/DXMRIG_ALGO_CN_HEAVY)
+    endif()
 
-if (WITH_CN_PICO)
-    add_definitions(/DXMRIG_ALGO_CN_PICO)
-endif()
+    if (WITH_CN_PICO)
+        add_definitions(/DXMRIG_ALGO_CN_PICO)
+    endif()
 
-if (WITH_CN_FEMTO)
-    add_definitions(/DXMRIG_ALGO_CN_FEMTO)
-endif()
+    if (WITH_CN_FEMTO)
+        add_definitions(/DXMRIG_ALGO_CN_FEMTO)
+    endif()
 
-if (WITH_EMBEDDED_CONFIG)
-    add_definitions(/DXMRIG_FEATURE_EMBEDDED_CONFIG)
+    if (WITH_EMBEDDED_CONFIG)
+        add_definitions(/DXMRIG_FEATURE_EMBEDDED_CONFIG)
+    endif()
 endif()
 
 include(src/hw/api/api.cmake)
