@@ -81,18 +81,17 @@ set(HEADERS
     src/version.h
    )
 
-if (NOT WITH_CN)
-    # todo: Conditionally append to HEADERS_CRYPTO instead of this if-else approach
-    set(HEADERS_CRYPTO
-        src/backend/common/interfaces/IMemoryPool.h
-        src/crypto/common/HugePagesInfo.h
-        src/crypto/common/MemoryPool.h
-        src/crypto/common/Nonce.h
-        src/crypto/common/portable/mm_malloc.h
-        src/crypto/common/VirtualMemory.h
-    )
-else()
-    set(HEADERS_CRYPTO
+set(HEADERS_CRYPTO
+   src/backend/common/interfaces/IMemoryPool.h
+   src/crypto/common/HugePagesInfo.h
+   src/crypto/common/MemoryPool.h
+   src/crypto/common/Nonce.h
+   src/crypto/common/portable/mm_malloc.h
+   src/crypto/common/VirtualMemory.h
+)
+
+if (WITH_CN)
+    list(APPEND HEADERS_CRYPTO
         src/backend/common/interfaces/IMemoryPool.h
         src/crypto/cn/asm/CryptonightR_template.h
         src/crypto/cn/c_blake256.h
@@ -118,6 +117,7 @@ else()
 endif()
 
 if (XMRIG_ARM)
+    # todo: I think all these can be replced with `list(APPEND HEADERS_CRYPTO ...`
     if (WITH_CN)
         set(HEADERS_CRYPTO "${HEADERS_CRYPTO}" src/crypto/cn/CryptoNight_arm.h)
     else()
@@ -144,16 +144,15 @@ set(SOURCES
     src/xmrig.cpp
    )
 
-if (NOT WITH_CN)
-    # todo: Conditionally append to SOURCES_CRYPTO instead of this if-else approach
-    set(SOURCES_CRYPTO
-        src/crypto/common/HugePagesInfo.cpp
-        src/crypto/common/MemoryPool.cpp
-        src/crypto/common/Nonce.cpp
-        src/crypto/common/VirtualMemory.cpp
-    )
-else()
-    set(SOURCES_CRYPTO
+set(SOURCES_CRYPTO
+   src/crypto/common/HugePagesInfo.cpp
+   src/crypto/common/MemoryPool.cpp
+   src/crypto/common/Nonce.cpp
+   src/crypto/common/VirtualMemory.cpp
+)
+
+if (WITH_CN)
+    list(APPEND SOURCES_CRYPTO
         src/crypto/cn/c_blake256.c
         src/crypto/cn/c_groestl.c
         src/crypto/cn/c_jh.c
@@ -238,8 +237,7 @@ include(cmake/randomx.cmake)
 include(cmake/argon2.cmake)
 include(cmake/kawpow.cmake)
 
-if (NOT WITH_CN)
-    # todo: move if the ordering does not matter
+if (WITH_GHOSTRIDER)
     include(cmake/ghostrider.cmake)
 endif()
 
@@ -275,7 +273,7 @@ include(src/hw/api/api.cmake)
 include(src/hw/dmi/dmi.cmake)
 
 include_directories(src)
-include_directories(src/3rdparty)
+include_directories(src/3rdparty) # todo: this include could be causing issues with CN on ARMv6
 include_directories(${UV_INCLUDE_DIR})
 
 if (WITH_DEBUG_LOG)
@@ -283,7 +281,12 @@ if (WITH_DEBUG_LOG)
 endif()
 
 add_executable(${CMAKE_PROJECT_NAME} ${HEADERS} ${SOURCES} ${SOURCES_OS} ${HEADERS_CRYPTO} ${SOURCES_CRYPTO} ${SOURCES_SYSLOG} ${TLS_SOURCES} ${XMRIG_ASM_SOURCES})
-target_link_libraries(${CMAKE_PROJECT_NAME} ${XMRIG_ASM_LIBRARY} ${OPENSSL_LIBRARIES} ${UV_LIBRARIES} ${EXTRA_LIBS} ${CPUID_LIB} ${ARGON2_LIBRARY} ${ETHASH_LIBRARY} ${GHOSTRIDER_LIBRARY})
+
+if (WITH_GHOSTRIDER)
+    target_link_libraries(${CMAKE_PROJECT_NAME} ${XMRIG_ASM_LIBRARY} ${OPENSSL_LIBRARIES} ${UV_LIBRARIES} ${EXTRA_LIBS} ${CPUID_LIB} ${ARGON2_LIBRARY} ${ETHASH_LIBRARY} ${GHOSTRIDER_LIBRARY})
+else()
+    target_link_libraries(${CMAKE_PROJECT_NAME} ${XMRIG_ASM_LIBRARY} ${OPENSSL_LIBRARIES} ${UV_LIBRARIES} ${EXTRA_LIBS} ${CPUID_LIB} ${ARGON2_LIBRARY} ${ETHASH_LIBRARY})
+endif()
 
 if (WIN32)
     if (NOT ARM_TARGET)
