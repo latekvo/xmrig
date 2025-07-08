@@ -228,7 +228,12 @@ include(cmake/flags.cmake)
 include(cmake/randomx.cmake)
 include(cmake/argon2.cmake)
 include(cmake/kawpow.cmake)
-include(cmake/ghostrider.cmake)
+
+if (NOT XMRIG_ARM OR (NOT ARM_TARGET EQUAL 6))
+    # todo: move if the ordering does not matter
+    include(cmake/ghostrider.cmake)
+endif()
+
 include(cmake/OpenSSL.cmake)
 include(cmake/asm.cmake)
 
@@ -248,10 +253,13 @@ if (NOT XMRIG_ARM OR (NOT ARM_TARGET EQUAL 6))
     if (WITH_CN_FEMTO)
         add_definitions(/DXMRIG_ALGO_CN_FEMTO)
     endif()
+endif()
 
-    if (WITH_EMBEDDED_CONFIG)
-        add_definitions(/DXMRIG_FEATURE_EMBEDDED_CONFIG)
-    endif()
+# ^^^ could simplify with guard and: `remove_definitions(/DXMRIG_FEATURE_ASM)`
+
+
+if (WITH_EMBEDDED_CONFIG)
+    add_definitions(/DXMRIG_FEATURE_EMBEDDED_CONFIG)
 endif()
 
 include(src/hw/api/api.cmake)
