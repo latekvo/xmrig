@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.10)
 project(xmrig)
 
 option(WITH_HWLOC           "Enable hwloc support" ON)
+option(WITH_CN              "Enable CryptoNight algorithms family" ON)
 option(WITH_CN_LITE         "Enable CryptoNight-Lite algorithms family" ON)
 option(WITH_CN_HEAVY        "Enable CryptoNight-Heavy algorithms family" ON)
 option(WITH_CN_PICO         "Enable CryptoNight-Pico algorithm" ON)
@@ -49,6 +50,14 @@ include (cmake/os.cmake)
 include (src/base/base.cmake)
 include (src/backend/backend.cmake)
 
+if (XMRIG_ARM AND (ARM_TARGET EQUAL 6))
+    set(WITH_CN OFF)
+    set(WITH_GHOSTRIDER OFF)
+    add_definitions(-DWITH_CN=0)
+else()
+    set(WITH_CN ON)    
+    add_definitions(-DWITH_CN=1)
+endif()
 
 set(HEADERS
     "${HEADERS_BASE}"
@@ -72,7 +81,7 @@ set(HEADERS
     src/version.h
    )
 
-if (XMRIG_ARM AND (ARM_TARGET EQUAL 6))
+if (NOT WITH_CN)
     # todo: Conditionally append to HEADERS_CRYPTO instead of this if-else approach
     set(HEADERS_CRYPTO
         src/backend/common/interfaces/IMemoryPool.h
@@ -109,7 +118,7 @@ else()
 endif()
 
 if (XMRIG_ARM)
-    if (ARM_TARGET GREATER 6)
+    if (WITH_CN)
         set(HEADERS_CRYPTO "${HEADERS_CRYPTO}" src/crypto/cn/CryptoNight_arm.h)
     else()
         set(HEADERS_CRYPTO "${HEADERS_CRYPTO}")
@@ -135,7 +144,7 @@ set(SOURCES
     src/xmrig.cpp
    )
 
-if (XMRIG_ARM AND (ARM_TARGET EQUAL 6))
+if (NOT WITH_CN)
     # todo: Conditionally append to SOURCES_CRYPTO instead of this if-else approach
     set(SOURCES_CRYPTO
         src/crypto/common/HugePagesInfo.cpp
@@ -158,11 +167,11 @@ else()
     )
 endif()
 
-if (CMAKE_C_COMPILER_ID MATCHES GNU AND (NOT XMRIG_ARM OR NOT ARM_TARGET EQUAL 6))
+if (CMAKE_C_COMPILER_ID MATCHES GNU AND WITH_CN)
     set_source_files_properties(src/crypto/cn/CnHash.cpp PROPERTIES COMPILE_FLAGS "-Ofast -fno-tree-vectorize")
 endif()
 
-if (WITH_VAES AND (NOT XMRIG_ARM OR NOT (ARM_TARGET EQUAL 6)))
+if (WITH_VAES AND WITH_CN)
     add_definitions(-DXMRIG_VAES)
     set(HEADERS_CRYPTO "${HEADERS_CRYPTO}" src/crypto/cn/CryptoNight_x86_vaes.h)
     set(SOURCES_CRYPTO "${SOURCES_CRYPTO}" src/crypto/cn/CryptoNight_x86_vaes.cpp)
@@ -229,7 +238,7 @@ include(cmake/randomx.cmake)
 include(cmake/argon2.cmake)
 include(cmake/kawpow.cmake)
 
-if (NOT XMRIG_ARM OR (NOT ARM_TARGET EQUAL 6))
+if (NOT WITH_CN)
     # todo: move if the ordering does not matter
     include(cmake/ghostrider.cmake)
 endif()
@@ -237,7 +246,7 @@ endif()
 include(cmake/OpenSSL.cmake)
 include(cmake/asm.cmake)
 
-if (NOT XMRIG_ARM OR (NOT ARM_TARGET EQUAL 6))
+if (WITH_CN)
     if (WITH_CN_LITE)
         add_definitions(/DXMRIG_ALGO_CN_LITE)
     endif()
