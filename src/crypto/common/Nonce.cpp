@@ -30,6 +30,9 @@ std::atomic<uint64_t> Nonce::m_nonces[2] = { {0}, {0} };
 } // namespace xmrig
 
 
+// Fixme: Multiple ABI linking error originating from this file.
+// Todo: Check why atomics use 64-bit types when nonce is stored as 32-bit
+
 bool xmrig::Nonce::next(uint8_t index, uint32_t *nonce, uint32_t reserveCount, uint64_t mask)
 {
     mask &= 0x7FFFFFFFFFFFFFFFULL;

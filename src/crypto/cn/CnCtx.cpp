@@ -26,6 +26,9 @@
 #include "crypto/common/portable/mm_malloc.h"
 #include "crypto/common/VirtualMemory.h"
 
+// fixme: Move CnCtx to SharedCtx.
+//        CnCtx is used for creating a shared RX & CN scratchpad,
+//        CnCtx::create seems simple enought to be used in isolation, without rest of CN
 
 void xmrig::CnCtx::create(cryptonight_ctx **ctx, uint8_t *memory, size_t size, size_t count)
 {
