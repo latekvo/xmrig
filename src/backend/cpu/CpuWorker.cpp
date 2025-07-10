@@ -27,9 +27,13 @@
 #include "base/tools/Chrono.h"
 #include "core/config/Config.h"
 #include "core/Miner.h"
-#include "crypto/cn/CnCtx.h"
-#include "crypto/cn/CryptoNight_test.h"
-#include "crypto/cn/CryptoNight.h"
+
+#ifdef XMRIG_ALGO_CN
+#   include "crypto/cn/CnCtx.h"
+#   include "crypto/cn/CryptoNight_test.h"
+#   include "crypto/cn/CryptoNight.h"
+#endif
+
 #include "crypto/common/Nonce.h"
 #include "crypto/common/VirtualMemory.h"
 #include "crypto/rx/Rx.h"
@@ -164,7 +168,11 @@ bool xmrig::CpuWorker<N>::selfTest()
     }
 #   endif
 
+#   ifdef XMRIG_ALGO_CN
+
     allocateCnCtx();
+
+#   endif
 
 #   ifdef XMRIG_ALGO_GHOSTRIDER
     if (m_algorithm.family() == Algorithm::GHOSTRIDER) {
@@ -388,7 +396,7 @@ bool xmrig::CpuWorker<N>::nextRound()
 template<size_t N>
 bool xmrig::CpuWorker<N>::verify(const Algorithm &algorithm, const uint8_t *referenceValue)
 {
-#   ifdef XMRIG_ALGO_GHOSTRIDER
+#   if defined(XMRIG_ALGO_GHOSTRIDER) 
     if (algorithm == Algorithm::GHOSTRIDER_RTM) {
         uint8_t blob[N * 80] = {};
         for (size_t i = 0; i < N; ++i) {
@@ -417,7 +425,8 @@ bool xmrig::CpuWorker<N>::verify(const Algorithm &algorithm, const uint8_t *refe
 
         return true;
     }
-#   endif
+
+#   elif defined(XMRIG_ALGO_CN) 
 
     cn_hash_fun func = fn(algorithm);
     if (!func) {
@@ -426,12 +435,17 @@ bool xmrig::CpuWorker<N>::verify(const Algorithm &algorithm, const uint8_t *refe
 
     func(test_input, 76, m_hash, m_ctx, 0);
     return memcmp(m_hash, referenceValue, sizeof m_hash) == 0;
+
+#   else
+    return false; // fixme: might need to change to true
+#   endif
 }
 
 
 template<size_t N>
 bool xmrig::CpuWorker<N>::verify2(const Algorithm &algorithm, const uint8_t *referenceValue)
 {
+#   ifdef XMRIG_ALGO_CN
     cn_hash_fun func = fn(algorithm);
     if (!func) {
         return false;
@@ -453,6 +467,9 @@ bool xmrig::CpuWorker<N>::verify2(const Algorithm &algorithm, const uint8_t *ref
     }
 
     return true;
+#   else
+    return false; // fixme: might need to change to true
+#   endif
 }
 
 
@@ -461,6 +478,8 @@ namespace xmrig {
 template<>
 bool CpuWorker<1>::verify2(const Algorithm &algorithm, const uint8_t *referenceValue)
 {
+#   ifdef XMRIG_ALGO_CN
+
     cn_hash_fun func = fn(algorithm);
     if (!func) {
         return false;
@@ -475,6 +494,9 @@ bool CpuWorker<1>::verify2(const Algorithm &algorithm, const uint8_t *referenceV
     }
 
     return true;
+#   else
+    return false; // fixme: might need to change to true
+#   endif
 }
 
 } // namespace xmrig
@@ -493,7 +515,10 @@ void xmrig::CpuWorker<N>::allocateCnCtx()
         }
 #       endif
 
+#   ifdef XMRIG_ALGO_CN
+        // Fixme: CN & RX share scratchpad, we might need to allow for CnCtx while excluding rest of Cn
         CnCtx::create(m_ctx, m_memory->scratchpad() + shift, m_algorithm.l3(), N);
+#   endif
     }
 }
 
@@ -523,6 +548,7 @@ void xmrig::CpuWorker<N>::consumeJob()
     else
 #   endif
     {
+        // Fixme: CN & RX share scratchpad, we might need to move the init to common if possible
         allocateCnCtx();
     }
 }

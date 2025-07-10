@@ -60,7 +60,8 @@ bool xmrig::CpuLaunchData::isEqual(const CpuLaunchData &other) const
             );
 }
 
-
+// fixme: CpuLaunchData::av might need to be mocked, not replaced
+#ifdef XMRIG_ALGO_CN
 xmrig::CnHash::AlgoVariant xmrig::CpuLaunchData::av() const
 {
     if (intensity <= 2) {
@@ -69,7 +70,7 @@ xmrig::CnHash::AlgoVariant xmrig::CpuLaunchData::av() const
 
     return static_cast<CnHash::AlgoVariant>(!hwAES ? (intensity + 5) : (intensity + 2));
 }
-
+#endif
 
 const char *xmrig::CpuLaunchData::tag()
 {

@@ -19,8 +19,10 @@
 #include "backend/common/Threads.h"
 #include "3rdparty/rapidjson/document.h"
 #include "backend/cpu/CpuThreads.h"
-#include "crypto/cn/CnAlgo.h"
 
+#ifdef XMRIG_ALGO_CN
+#   include "crypto/cn/CnAlgo.h"
+#endif
 
 #ifdef XMRIG_FEATURE_OPENCL
 #   include "backend/opencl/OclThreads.h"
@@ -117,9 +119,11 @@ xmrig::String xmrig::Threads<T>::profileName(const Algorithm &algorithm, bool st
         return String();
     }
 
+#   ifdef XMRIG_ALGO_CN
     if (algorithm.family() == Algorithm::CN && algorithm.base() == Algorithm::CN_2 && has(Algorithm::kCN_2)) {
         return Algorithm::kCN_2;
     }
+#   endif
 
     if (name.contains("/")) {
         String base = name.split('/').at(0);

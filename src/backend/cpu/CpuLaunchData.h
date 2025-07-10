@@ -28,7 +28,11 @@
 
 
 #include "base/crypto/Algorithm.h"
-#include "crypto/cn/CnHash.h"
+
+#ifdef XMRIG_ALGO_CN
+#   include "crypto/cn/CnHash.h"
+#endif
+
 #include "crypto/common/Assembly.h"
 #include "crypto/common/Nonce.h"
 
@@ -47,7 +51,10 @@ public:
     CpuLaunchData(const Miner *miner, const Algorithm &algorithm, const CpuConfig &config, const CpuThread &thread, size_t threads, const std::vector<int64_t>& affinities);
 
     bool isEqual(const CpuLaunchData &other) const;
+
+#   ifdef XMRIG_ALGO_CN
     CnHash::AlgoVariant av() const;
+#   endif
 
     inline constexpr static Nonce::Backend backend()            { return Nonce::CPU; }
 

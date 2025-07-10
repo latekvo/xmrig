@@ -71,7 +71,11 @@ protected:
     inline void jobEarlyNotification(const Job&) override   {}
 
 private:
+
+// todo: fn might need to be mocked
+#   ifdef XMRIG_ALGO_CN
     inline cn_hash_fun fn(const Algorithm &algorithm) const { return CnHash::fn(algorithm, m_av, m_assembly); }
+#   endif
 
 #   ifdef XMRIG_ALGO_RANDOMX
     void allocateRandomX_VM();

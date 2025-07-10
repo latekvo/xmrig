@@ -53,10 +53,9 @@ include (src/backend/backend.cmake)
 if (XMRIG_ARM AND (ARM_TARGET EQUAL 6))
     set(WITH_CN OFF)
     set(WITH_GHOSTRIDER OFF)
-    add_definitions(-DWITH_CN=0)
 else()
     set(WITH_CN ON)    
-    add_definitions(-DWITH_CN=1)
+    add_definitions(/DXMRIG_ALGO_CN)
 endif()
 
 set(HEADERS
