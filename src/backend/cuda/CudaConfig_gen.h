@@ -63,6 +63,7 @@ size_t inline generate<Algorithm::CN>(Threads<CudaThreads> &threads, const std::
 }
 #endif
 
+
 #ifdef XMRIG_ALGO_CN_LITE
 template<>
 size_t inline generate<Algorithm::CN_LITE>(Threads<CudaThreads> &threads, const std::vector<CudaDevice> &devices)

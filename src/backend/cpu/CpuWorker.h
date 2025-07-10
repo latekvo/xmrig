@@ -92,7 +92,12 @@ private:
     const Assembly m_assembly;
     const bool m_hwAES;
     const bool m_yield;
+
+    // fixme: AlgoVariant **might** be required for non-cn algorithms
+#   ifdef XMRIG_ALGO_CN
     const CnHash::AlgoVariant m_av;
+#   endif
+
     const Miner *m_miner;
     const size_t m_threads;
     cryptonight_ctx *m_ctx[N];

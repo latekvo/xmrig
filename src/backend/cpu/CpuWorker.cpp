@@ -114,6 +114,7 @@ xmrig::CpuWorker<N>::~CpuWorker()
     RxVm::destroy(m_vm);
 #   endif
 
+    // fixme: Use SharedCtx
     CnCtx::release(m_ctx, N);
 
 #   ifdef XMRIG_ALGO_CN_HEAVY
