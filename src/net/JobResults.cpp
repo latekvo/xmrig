@@ -31,6 +31,7 @@
 #include "base/tools/Object.h"
 #include "net/interfaces/IJobResultListener.h"
 #include "net/JobResult.h"
+#include "crypto/common/AlgoCtx.h"
 
 
 #ifdef XMRIG_ALGO_RANDOMX
@@ -50,7 +51,6 @@
 #   include "base/tools/Baton.h"
 #   include "crypto/cn/CnCtx.h"
 #   include "crypto/cn/CnHash.h"
-#   include "crypto/cn/AlgoCtx.h"
 #   include "crypto/common/VirtualMemory.h"
 #endif
 

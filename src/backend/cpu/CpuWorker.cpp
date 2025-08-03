@@ -31,11 +31,11 @@
 #ifdef XMRIG_ALGO_CN
 #   include "crypto/cn/CnCtx.h"
 #   include "crypto/cn/CryptoNight_test.h"
-#   include "crypto/cn/AlgoCtx.h"
 #endif
 
 #include "crypto/common/Nonce.h"
 #include "crypto/common/VirtualMemory.h"
+#include "crypto/common/AlgoCtx.h"
 #include "crypto/rx/Rx.h"
 #include "crypto/rx/RxCache.h"
 #include "crypto/rx/RxDataset.h"

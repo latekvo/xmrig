@@ -87,6 +87,7 @@ set(HEADERS_CRYPTO
    src/crypto/common/Nonce.h
    src/crypto/common/portable/mm_malloc.h
    src/crypto/common/VirtualMemory.h
+   src/crypto/common/AlgoCtx.h
 )
 
 if (WITH_CN)
@@ -102,7 +103,6 @@ if (WITH_CN)
         src/crypto/cn/CnHash.h
         src/crypto/cn/CryptoNight_monero.h
         src/crypto/cn/CryptoNight_test.h
-        src/crypto/cn/AlgoCtx.h
         src/crypto/cn/groestl_tables.h
         src/crypto/cn/hash.h
         src/crypto/cn/skein_port.h

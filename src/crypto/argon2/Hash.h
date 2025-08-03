@@ -28,7 +28,7 @@
 
 #include "3rdparty/argon2.h"
 #include "base/crypto/Algorithm.h"
-#include "crypto/cn/AlgoCtx.h"
+#include "crypto/common/AlgoCtx.h"
 
 
 namespace xmrig { namespace argon2 {

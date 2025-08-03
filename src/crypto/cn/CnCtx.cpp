@@ -22,7 +22,7 @@
 
 #include "crypto/cn/CnCtx.h"
 #include "base/crypto/Algorithm.h"
-#include "crypto/cn/AlgoCtx.h"
+#include "crypto/common/AlgoCtx.h"
 #include "crypto/common/portable/mm_malloc.h"
 #include "crypto/common/VirtualMemory.h"
 

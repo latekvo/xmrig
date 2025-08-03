@@ -25,7 +25,7 @@
 
 #include "CryptoNight_x86_vaes.h"
 #include "CryptoNight_monero.h"
-#include "AlgoCtx.h"
+#include "crypto/common/AlgoCtx.h"
 
 
 #ifdef __GNUC__

@@ -39,7 +39,7 @@
 #include "backend/cpu/Cpu.h"
 #include "crypto/cn/CnHash.h"
 #include "crypto/cn/CnCtx.h"
-#include "crypto/cn/AlgoCtx.h"
+#include "crypto/common/AlgoCtx.h"
 #include "crypto/common/VirtualMemory.h"
 
 #include <thread>
