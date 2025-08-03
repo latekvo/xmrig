@@ -31,7 +31,7 @@
 #include "base/crypto/keccak.h"
 #include "crypto/cn/CnAlgo.h"
 #include "crypto/cn/CryptoNight_monero.h"
-#include "crypto/cn/CryptoNight.h"
+#include "crypto/cn/AlgoCtx.h"
 #include "crypto/cn/soft_aes.h"
 
 
@@ -395,7 +395,7 @@ static inline void cryptonight_conceal_tweak(__m128i& cx, __m128& conc_var)
 
 
 template<Algorithm::Id ALGO, bool SOFT_AES, int interleave>
-inline void cryptonight_single_hash(const uint8_t *__restrict__ input, size_t size, uint8_t *__restrict__ output, cryptonight_ctx **__restrict__ ctx, uint64_t height)
+inline void cryptonight_single_hash(const uint8_t *__restrict__ input, size_t size, uint8_t *__restrict__ output, algo_l3_ctx **__restrict__ ctx, uint64_t height)
 {
     constexpr CnAlgo<ALGO> props;
     constexpr size_t MASK        = props.mask();
@@ -544,7 +544,7 @@ inline void cryptonight_single_hash(const uint8_t *__restrict__ input, size_t si
 
 
 template<Algorithm::Id ALGO, bool SOFT_AES>
-inline void cryptonight_double_hash(const uint8_t *__restrict__ input, size_t size, uint8_t *__restrict__ output, struct cryptonight_ctx **__restrict__ ctx, uint64_t height)
+inline void cryptonight_double_hash(const uint8_t *__restrict__ input, size_t size, uint8_t *__restrict__ output, struct algo_l3_ctx **__restrict__ ctx, uint64_t height)
 {
     constexpr CnAlgo<ALGO> props;
     constexpr size_t MASK        = props.mask();
@@ -787,19 +787,19 @@ inline void cryptonight_double_hash(const uint8_t *__restrict__ input, size_t si
 
 
 template<Algorithm::Id ALGO, bool SOFT_AES>
-inline void cryptonight_triple_hash(const uint8_t *__restrict__ input, size_t size, uint8_t *__restrict__ output, struct cryptonight_ctx **__restrict__ ctx, uint64_t height)
+inline void cryptonight_triple_hash(const uint8_t *__restrict__ input, size_t size, uint8_t *__restrict__ output, struct algo_l3_ctx **__restrict__ ctx, uint64_t height)
 {
 }
 
 
 template<Algorithm::Id ALGO, bool SOFT_AES>
-inline void cryptonight_quad_hash(const uint8_t *__restrict__ input, size_t size, uint8_t *__restrict__ output, struct cryptonight_ctx **__restrict__ ctx, uint64_t height)
+inline void cryptonight_quad_hash(const uint8_t *__restrict__ input, size_t size, uint8_t *__restrict__ output, struct algo_l3_ctx **__restrict__ ctx, uint64_t height)
 {
 }
 
 
 template<Algorithm::Id ALGO, bool SOFT_AES>
-inline void cryptonight_penta_hash(const uint8_t *__restrict__ input, size_t size, uint8_t *__restrict__ output, struct cryptonight_ctx **__restrict__ ctx, uint64_t height)
+inline void cryptonight_penta_hash(const uint8_t *__restrict__ input, size_t size, uint8_t *__restrict__ output, struct algo_l3_ctx **__restrict__ ctx, uint64_t height)
 {
 }
 

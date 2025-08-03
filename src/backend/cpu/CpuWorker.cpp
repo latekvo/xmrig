@@ -31,7 +31,7 @@
 #ifdef XMRIG_ALGO_CN
 #   include "crypto/cn/CnCtx.h"
 #   include "crypto/cn/CryptoNight_test.h"
-#   include "crypto/cn/CryptoNight.h"
+#   include "crypto/cn/AlgoCtx.h"
 #endif
 
 #include "crypto/common/Nonce.h"

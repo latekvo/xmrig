@@ -39,7 +39,7 @@
 #include "base/crypto/keccak.h"
 #include "crypto/cn/CnAlgo.h"
 #include "crypto/cn/CryptoNight_monero.h"
-#include "crypto/cn/CryptoNight.h"
+#include "crypto/cn/AlgoCtx.h"
 #include "crypto/cn/soft_aes.h"
 
 
@@ -290,7 +290,7 @@ inline constexpr uint64_t interleaved_index<0>(uint64_t k)
 
 
 template<Algorithm::Id ALGO, bool SOFT_AES, int interleave>
-static NOINLINE void cn_explode_scratchpad(cryptonight_ctx *ctx)
+static NOINLINE void cn_explode_scratchpad(algo_l3_ctx *ctx)
 {
     constexpr CnAlgo<ALGO> props;
 
@@ -404,7 +404,7 @@ static NOINLINE void cn_explode_scratchpad(cryptonight_ctx *ctx)
 
 
 template<Algorithm::Id ALGO, bool SOFT_AES, int interleave>
-static NOINLINE void cn_implode_scratchpad(cryptonight_ctx *ctx)
+static NOINLINE void cn_implode_scratchpad(algo_l3_ctx *ctx)
 {
     constexpr CnAlgo<ALGO> props;
 
@@ -636,11 +636,11 @@ static inline void cryptonight_conceal_tweak(__m128i& cx, __m128& conc_var)
 
 #ifdef XMRIG_FEATURE_ASM
 template<Algorithm::Id ALGO>
-static void cryptonight_single_hash_gr_sse41(const uint8_t* __restrict__ input, size_t size, uint8_t* __restrict__ output, cryptonight_ctx** __restrict__ ctx, uint64_t height);
+static void cryptonight_single_hash_gr_sse41(const uint8_t* __restrict__ input, size_t size, uint8_t* __restrict__ output, algo_l3_ctx** __restrict__ ctx, uint64_t height);
 #endif
 
 template<Algorithm::Id ALGO, bool SOFT_AES, int interleave>
-inline void cryptonight_single_hash(const uint8_t *__restrict__ input, size_t size, uint8_t *__restrict__ output, cryptonight_ctx **__restrict__ ctx, uint64_t height)
+inline void cryptonight_single_hash(const uint8_t *__restrict__ input, size_t size, uint8_t *__restrict__ output, algo_l3_ctx **__restrict__ ctx, uint64_t height)
 {
 #   ifdef XMRIG_FEATURE_ASM
     if (!SOFT_AES) {
@@ -848,22 +848,22 @@ inline void cryptonight_single_hash(const uint8_t *__restrict__ input, size_t si
 
 
 #ifdef XMRIG_FEATURE_ASM
-extern "C" void cnv1_single_mainloop_asm(cryptonight_ctx * *ctx);
-extern "C" void cnv1_double_mainloop_asm(cryptonight_ctx **ctx);
-extern "C" void cnv1_quad_mainloop_asm(cryptonight_ctx **ctx);
-extern "C" void cnv2_mainloop_ivybridge_asm(cryptonight_ctx **ctx);
-extern "C" void cnv2_mainloop_ryzen_asm(cryptonight_ctx **ctx);
-extern "C" void cnv2_mainloop_bulldozer_asm(cryptonight_ctx **ctx);
-extern "C" void cnv2_double_mainloop_sandybridge_asm(cryptonight_ctx **ctx);
-extern "C" void cnv2_rwz_mainloop_asm(cryptonight_ctx **ctx);
-extern "C" void cnv2_rwz_double_mainloop_asm(cryptonight_ctx **ctx);
-extern "C" void cnv2_upx_double_mainloop_zen3_asm(cryptonight_ctx **ctx);
+extern "C" void cnv1_single_mainloop_asm(algo_l3_ctx * *ctx);
+extern "C" void cnv1_double_mainloop_asm(algo_l3_ctx **ctx);
+extern "C" void cnv1_quad_mainloop_asm(algo_l3_ctx **ctx);
+extern "C" void cnv2_mainloop_ivybridge_asm(algo_l3_ctx **ctx);
+extern "C" void cnv2_mainloop_ryzen_asm(algo_l3_ctx **ctx);
+extern "C" void cnv2_mainloop_bulldozer_asm(algo_l3_ctx **ctx);
+extern "C" void cnv2_double_mainloop_sandybridge_asm(algo_l3_ctx **ctx);
+extern "C" void cnv2_rwz_mainloop_asm(algo_l3_ctx **ctx);
+extern "C" void cnv2_rwz_double_mainloop_asm(algo_l3_ctx **ctx);
+extern "C" void cnv2_upx_double_mainloop_zen3_asm(algo_l3_ctx **ctx);
 
 
 namespace xmrig {
 
 
-typedef void (*cn_mainloop_fun)(cryptonight_ctx **ctx);
+typedef void (*cn_mainloop_fun)(algo_l3_ctx **ctx);
 
 
 extern cn_mainloop_fun cn_half_mainloop_ivybridge_asm;
@@ -941,7 +941,7 @@ namespace xmrig {
 
 
 template<Algorithm::Id ALGO, Assembly::Id ASM>
-inline void cryptonight_single_hash_asm(const uint8_t *__restrict__ input, size_t size, uint8_t *__restrict__ output, cryptonight_ctx **__restrict__ ctx, uint64_t height)
+inline void cryptonight_single_hash_asm(const uint8_t *__restrict__ input, size_t size, uint8_t *__restrict__ output, algo_l3_ctx **__restrict__ ctx, uint64_t height)
 {
     constexpr CnAlgo<ALGO> props;
 
@@ -1047,7 +1047,7 @@ inline void cryptonight_single_hash_asm(const uint8_t *__restrict__ input, size_
 
 
 template<Algorithm::Id ALGO, Assembly::Id ASM>
-inline void cryptonight_double_hash_asm(const uint8_t *__restrict__ input, size_t size, uint8_t *__restrict__ output, cryptonight_ctx **__restrict__ ctx, uint64_t height)
+inline void cryptonight_double_hash_asm(const uint8_t *__restrict__ input, size_t size, uint8_t *__restrict__ output, algo_l3_ctx **__restrict__ ctx, uint64_t height)
 {
     constexpr CnAlgo<ALGO> props;
 
@@ -1143,7 +1143,7 @@ namespace xmrig {
 
 #ifdef XMRIG_FEATURE_ASM
 template<Algorithm::Id ALGO>
-static NOINLINE void cryptonight_single_hash_gr_sse41(const uint8_t* __restrict__ input, size_t size, uint8_t* __restrict__ output, cryptonight_ctx** __restrict__ ctx, uint64_t height)
+static NOINLINE void cryptonight_single_hash_gr_sse41(const uint8_t* __restrict__ input, size_t size, uint8_t* __restrict__ output, algo_l3_ctx** __restrict__ ctx, uint64_t height)
 {
     constexpr CnAlgo<ALGO> props;
     constexpr Algorithm::Id BASE = props.base();
@@ -1177,7 +1177,7 @@ static NOINLINE void cryptonight_single_hash_gr_sse41(const uint8_t* __restrict_
 
 
 template<Algorithm::Id ALGO>
-static NOINLINE void cryptonight_double_hash_gr_sse41(const uint8_t *__restrict__ input, size_t size, uint8_t *__restrict__ output, cryptonight_ctx **__restrict__ ctx, uint64_t height)
+static NOINLINE void cryptonight_double_hash_gr_sse41(const uint8_t *__restrict__ input, size_t size, uint8_t *__restrict__ output, algo_l3_ctx **__restrict__ ctx, uint64_t height)
 {
     constexpr CnAlgo<ALGO> props;
     constexpr Algorithm::Id BASE = props.base();
@@ -1242,7 +1242,7 @@ static NOINLINE void cryptonight_double_hash_gr_sse41(const uint8_t *__restrict_
 
 
 template<Algorithm::Id ALGO, bool SOFT_AES>
-inline void cryptonight_double_hash(const uint8_t *__restrict__ input, size_t size, uint8_t *__restrict__ output, cryptonight_ctx **__restrict__ ctx, uint64_t height)
+inline void cryptonight_double_hash(const uint8_t *__restrict__ input, size_t size, uint8_t *__restrict__ output, algo_l3_ctx **__restrict__ ctx, uint64_t height)
 {
 #   ifdef XMRIG_FEATURE_ASM
     if (!SOFT_AES) {
@@ -1526,7 +1526,7 @@ inline void cryptonight_double_hash(const uint8_t *__restrict__ input, size_t si
 
 #ifdef XMRIG_FEATURE_ASM
 template<Algorithm::Id ALGO>
-static NOINLINE void cryptonight_quad_hash_gr_sse41(const uint8_t* __restrict__ input, size_t size, uint8_t* __restrict__ output, cryptonight_ctx** __restrict__ ctx, uint64_t height)
+static NOINLINE void cryptonight_quad_hash_gr_sse41(const uint8_t* __restrict__ input, size_t size, uint8_t* __restrict__ output, algo_l3_ctx** __restrict__ ctx, uint64_t height)
 {
     constexpr CnAlgo<ALGO> props;
     constexpr Algorithm::Id BASE = props.base();
@@ -1717,7 +1717,7 @@ static NOINLINE void cryptonight_quad_hash_gr_sse41(const uint8_t* __restrict__ 
 
 
 template<Algorithm::Id ALGO, bool SOFT_AES>
-inline void cryptonight_triple_hash(const uint8_t *__restrict__ input, size_t size, uint8_t *__restrict__ output, cryptonight_ctx **__restrict__ ctx, uint64_t height)
+inline void cryptonight_triple_hash(const uint8_t *__restrict__ input, size_t size, uint8_t *__restrict__ output, algo_l3_ctx **__restrict__ ctx, uint64_t height)
 {
     constexpr CnAlgo<ALGO> props;
     constexpr size_t MASK        = props.mask();
@@ -1794,7 +1794,7 @@ inline void cryptonight_triple_hash(const uint8_t *__restrict__ input, size_t si
 
 
 template<Algorithm::Id ALGO, bool SOFT_AES>
-inline void cryptonight_quad_hash(const uint8_t *__restrict__ input, size_t size, uint8_t *__restrict__ output, cryptonight_ctx **__restrict__ ctx, uint64_t height)
+inline void cryptonight_quad_hash(const uint8_t *__restrict__ input, size_t size, uint8_t *__restrict__ output, algo_l3_ctx **__restrict__ ctx, uint64_t height)
 {
 #   ifdef XMRIG_FEATURE_ASM
     if (!SOFT_AES) {
@@ -1926,7 +1926,7 @@ inline void cryptonight_quad_hash(const uint8_t *__restrict__ input, size_t size
 
 
 template<Algorithm::Id ALGO, bool SOFT_AES>
-inline void cryptonight_penta_hash(const uint8_t *__restrict__ input, size_t size, uint8_t *__restrict__ output, cryptonight_ctx **__restrict__ ctx, uint64_t height)
+inline void cryptonight_penta_hash(const uint8_t *__restrict__ input, size_t size, uint8_t *__restrict__ output, algo_l3_ctx **__restrict__ ctx, uint64_t height)
 {
     constexpr CnAlgo<ALGO> props;
     constexpr size_t MASK        = props.mask();

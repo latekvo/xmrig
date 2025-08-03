@@ -25,7 +25,7 @@
 #include <vector>
 
 
-struct cryptonight_ctx;
+struct algo_l3_ctx;
 
 
 namespace xmrig
@@ -41,7 +41,7 @@ struct HelperThread;
 void benchmark();
 HelperThread* create_helper_thread(int64_t cpu_index, int priority, const std::vector<int64_t>& affinities);
 void destroy_helper_thread(HelperThread* t);
-void hash_octa(const uint8_t* data, size_t size, uint8_t* output, cryptonight_ctx** ctx, HelperThread* helper, bool verbose = true);
+void hash_octa(const uint8_t* data, size_t size, uint8_t* output, algo_l3_ctx** ctx, HelperThread* helper, bool verbose = true);
 
 
 } // namespace ghostrider

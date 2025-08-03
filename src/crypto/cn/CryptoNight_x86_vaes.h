@@ -30,16 +30,16 @@
 #include "crypto/cn/CnAlgo.h"
 
 
-struct cryptonight_ctx;
+struct algo_l3_ctx;
 
 
 namespace xmrig {
 
 
-void cn_explode_scratchpad_vaes(cryptonight_ctx* ctx, size_t memory, bool half_mem);
-void cn_explode_scratchpad_vaes_double(cryptonight_ctx* ctx1, cryptonight_ctx* ctx2, size_t memory, bool half_mem);
-void cn_implode_scratchpad_vaes(cryptonight_ctx* ctx, size_t memory, bool half_mem);
-void cn_implode_scratchpad_vaes_double(cryptonight_ctx* ctx1, cryptonight_ctx* ctx2, size_t memory, bool half_mem);
+void cn_explode_scratchpad_vaes(algo_l3_ctx* ctx, size_t memory, bool half_mem);
+void cn_explode_scratchpad_vaes_double(algo_l3_ctx* ctx1, algo_l3_ctx* ctx2, size_t memory, bool half_mem);
+void cn_implode_scratchpad_vaes(algo_l3_ctx* ctx, size_t memory, bool half_mem);
+void cn_implode_scratchpad_vaes_double(algo_l3_ctx* ctx1, algo_l3_ctx* ctx2, size_t memory, bool half_mem);
 
 
 } // xmrig

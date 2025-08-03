@@ -25,7 +25,7 @@
 
 #include "CryptoNight_x86_vaes.h"
 #include "CryptoNight_monero.h"
-#include "CryptoNight.h"
+#include "AlgoCtx.h"
 
 
 #ifdef __GNUC__
@@ -162,7 +162,7 @@ static FORCEINLINE void vaes_round(__m256i key, __m256i& x0, __m256i& x1, __m256
 namespace xmrig {
 
 
-NOINLINE void cn_explode_scratchpad_vaes(cryptonight_ctx* ctx, size_t memory, bool half_mem)
+NOINLINE void cn_explode_scratchpad_vaes(algo_l3_ctx* ctx, size_t memory, bool half_mem)
 {
     const size_t N = (memory / sizeof(__m256i)) / (half_mem ? 2 : 1);
 
@@ -235,7 +235,7 @@ NOINLINE void cn_explode_scratchpad_vaes(cryptonight_ctx* ctx, size_t memory, bo
 }
 
 
-NOINLINE void cn_explode_scratchpad_vaes_double(cryptonight_ctx* ctx1, cryptonight_ctx* ctx2, size_t memory, bool half_mem)
+NOINLINE void cn_explode_scratchpad_vaes_double(algo_l3_ctx* ctx1, algo_l3_ctx* ctx2, size_t memory, bool half_mem)
 {
     const size_t N = (memory / sizeof(__m128i)) / (half_mem ? 2 : 1);
 
@@ -326,7 +326,7 @@ NOINLINE void cn_explode_scratchpad_vaes_double(cryptonight_ctx* ctx1, cryptonig
 }
 
 
-NOINLINE void cn_implode_scratchpad_vaes(cryptonight_ctx* ctx, size_t memory, bool half_mem)
+NOINLINE void cn_implode_scratchpad_vaes(algo_l3_ctx* ctx, size_t memory, bool half_mem)
 {
     const size_t N = (memory / sizeof(__m256i)) / (half_mem ? 2 : 1);
 
@@ -390,7 +390,7 @@ NOINLINE void cn_implode_scratchpad_vaes(cryptonight_ctx* ctx, size_t memory, bo
 }
 
 
-NOINLINE void cn_implode_scratchpad_vaes_double(cryptonight_ctx* ctx1, cryptonight_ctx* ctx2, size_t memory, bool half_mem)
+NOINLINE void cn_implode_scratchpad_vaes_double(algo_l3_ctx* ctx1, algo_l3_ctx* ctx2, size_t memory, bool half_mem)
 {
     const size_t N = (memory / sizeof(__m128i)) / (half_mem ? 2 : 1);
 

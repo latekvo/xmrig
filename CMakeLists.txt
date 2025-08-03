@@ -102,7 +102,7 @@ if (WITH_CN)
         src/crypto/cn/CnHash.h
         src/crypto/cn/CryptoNight_monero.h
         src/crypto/cn/CryptoNight_test.h
-        src/crypto/cn/CryptoNight.h
+        src/crypto/cn/AlgoCtx.h
         src/crypto/cn/groestl_tables.h
         src/crypto/cn/hash.h
         src/crypto/cn/skein_port.h

@@ -50,7 +50,7 @@
 #   include "base/tools/Baton.h"
 #   include "crypto/cn/CnCtx.h"
 #   include "crypto/cn/CnHash.h"
-#   include "crypto/cn/CryptoNight.h"
+#   include "crypto/cn/AlgoCtx.h"
 #   include "crypto/common/VirtualMemory.h"
 #endif
 
@@ -178,7 +178,7 @@ static void getResults(JobBundle &bundle, std::vector<JobResult> &results, uint3
 #       endif
     }
     else {
-        cryptonight_ctx *ctx[1];
+        algo_l3_ctx *ctx[1];
         CnCtx::create(ctx, memory->scratchpad(), memory->size(), 1);
 
         for (uint32_t nonce : bundle.nonces) {

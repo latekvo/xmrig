@@ -30,14 +30,14 @@
 #include "crypto/common/Assembly.h"
 
 
-struct cryptonight_ctx;
+struct algo_l3_ctx;
 
 
 namespace xmrig
 {
 
-using cn_hash_fun     = void (*)(const uint8_t *, size_t, uint8_t *, cryptonight_ctx **, uint64_t);
-using cn_mainloop_fun = void (*)(cryptonight_ctx **);
+using cn_hash_fun     = void (*)(const uint8_t *, size_t, uint8_t *, algo_l3_ctx **, uint64_t);
+using cn_mainloop_fun = void (*)(algo_l3_ctx **);
 
 
 class CnHash

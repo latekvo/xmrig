@@ -28,14 +28,14 @@
 
 #include "3rdparty/argon2.h"
 #include "base/crypto/Algorithm.h"
-#include "crypto/cn/CryptoNight.h"
+#include "crypto/cn/AlgoCtx.h"
 
 
 namespace xmrig { namespace argon2 {
 
 
 template<Algorithm::Id ALGO>
-inline void single_hash(const uint8_t *__restrict__ input, size_t size, uint8_t *__restrict__ output, cryptonight_ctx **__restrict__ ctx, uint64_t)
+inline void single_hash(const uint8_t *__restrict__ input, size_t size, uint8_t *__restrict__ output, algo_l3_ctx **__restrict__ ctx, uint64_t)
 {
     if (ALGO == Algorithm::AR2_CHUKWA) {
         argon2id_hash_raw_ex(3, 512, 1, input, size, input, 16, output, 32, ctx[0]->memory);

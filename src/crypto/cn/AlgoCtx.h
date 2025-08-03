@@ -23,8 +23,8 @@
  *   along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef XMRIG_CRYPTONIGHT_H
-#define XMRIG_CRYPTONIGHT_H
+#ifndef XMRIG_ALGO_L3_CTX_H
+#define XMRIG_ALGO_L3_CTX_H
 
 
 #include <stddef.h>
@@ -37,8 +37,8 @@
 #endif
 
 
-struct cryptonight_ctx;
-typedef void(*cn_mainloop_fun_ms_abi)(cryptonight_ctx**) ABI_ATTRIBUTE;
+struct algo_l3_ctx;
+typedef void(*algo_mainloop_fun_ms_abi)(algo_l3_ctx**) ABI_ATTRIBUTE;
 
 
 struct cryptonight_r_data {
@@ -49,7 +49,7 @@ struct cryptonight_r_data {
 };
 
 
-struct cryptonight_ctx {
+struct algo_l3_ctx {
     alignas(16) uint8_t state[224];
     alignas(16) uint8_t *memory;
     const uint32_t* tweak1_table;
@@ -58,7 +58,9 @@ struct cryptonight_ctx {
     uint8_t unused[24];
     const uint32_t *saes_table;
 
-    cn_mainloop_fun_ms_abi generated_code;
+    algo_mainloop_fun_ms_abi generated_code;
+
+    // TODO: Check if this is still used in RX, as it seems to be part of the legacy CN4 monero impl
     cryptonight_r_data generated_code_data;
 
     alignas(16) uint8_t save_state[128];
@@ -66,4 +68,4 @@ struct cryptonight_ctx {
 };
 
 
-#endif /* XMRIG_CRYPTONIGHT_H */
+#endif /* XMRIG_ALGO_L3_CTX_H */

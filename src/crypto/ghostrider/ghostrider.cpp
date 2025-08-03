@@ -39,7 +39,7 @@
 #include "backend/cpu/Cpu.h"
 #include "crypto/cn/CnHash.h"
 #include "crypto/cn/CnCtx.h"
-#include "crypto/cn/CryptoNight.h"
+#include "crypto/cn/AlgoCtx.h"
 #include "crypto/common/VirtualMemory.h"
 
 #include <thread>
@@ -328,7 +328,7 @@ void benchmark()
 
         LOG_VERBOSE("Running GhostRider benchmark on logical CPUs %u and %u (max scratchpad size %zu MB, huge pages %s)", thread_index1, thread_index2, max_scratchpad_size >> 20, memory->isHugePages() ? "on" : "off");
 
-        cryptonight_ctx* ctx[8];
+        algo_l3_ctx* ctx[8];
         CnCtx::create(ctx, memory->scratchpad(), N, 8);
 
         const CnHash::AlgoVariant* av = Cpu::info()->hasAES() ? av_hw_aes : av_soft_aes;
@@ -556,7 +556,7 @@ void destroy_helper_thread(HelperThread* t)
 }
 
 
-void hash_octa(const uint8_t* data, size_t size, uint8_t* output, cryptonight_ctx** ctx, HelperThread* helper, bool verbose)
+void hash_octa(const uint8_t* data, size_t size, uint8_t* output, algo_l3_ctx** ctx, HelperThread* helper, bool verbose)
 {
     enum { N = 8 };
 
@@ -789,7 +789,7 @@ HelperThread* create_helper_thread(int64_t, int, const std::vector<int64_t>&) { 
 void destroy_helper_thread(HelperThread*) {}
 
 
-void hash_octa(const uint8_t* data, size_t size, uint8_t* output, cryptonight_ctx** ctx, HelperThread*, bool verbose)
+void hash_octa(const uint8_t* data, size_t size, uint8_t* output, algo_l3_ctx** ctx, HelperThread*, bool verbose)
 {
     constexpr uint32_t N = 8;
 
