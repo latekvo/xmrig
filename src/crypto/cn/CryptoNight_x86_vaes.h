@@ -28,7 +28,7 @@
 
 
 #include "crypto/cn/CnAlgo.h"
-
+#include "crypto/common/AlgoCtx.h"
 
 struct algo_l3_ctx;
 

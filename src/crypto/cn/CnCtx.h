@@ -23,7 +23,7 @@
 
 #include <cstddef>
 #include <cstdint>
-
+#include "crypto/common/AlgoCtx.h"
 
 struct algo_l3_ctx;
 

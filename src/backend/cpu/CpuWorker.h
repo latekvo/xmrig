@@ -25,6 +25,7 @@
 #include "backend/cpu/CpuLaunchData.h"
 #include "base/tools/Object.h"
 #include "net/JobResult.h"
+#include "crypto/common/AlgoCtx.h"
 
 
 #ifdef XMRIG_ALGO_RANDOMX

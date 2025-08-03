@@ -30,6 +30,8 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#include "crypto/common/AlgoCtx.h"
+
 #if defined _MSC_VER || defined XMRIG_ARM
 #   define ABI_ATTRIBUTE
 #else
