@@ -35,6 +35,7 @@
 
 #include "crypto/common/Assembly.h"
 #include "crypto/common/Nonce.h"
+#include "crypto/common/AlgoVariant.h"
 
 
 namespace xmrig {
@@ -52,9 +53,7 @@ public:
 
     bool isEqual(const CpuLaunchData &other) const;
 
-#   ifdef XMRIG_ALGO_CN
-    CnHash::AlgoVariant av() const;
-#   endif
+    AV::AlgoVariant av() const;
 
     inline constexpr static Nonce::Backend backend()            { return Nonce::CPU; }
 

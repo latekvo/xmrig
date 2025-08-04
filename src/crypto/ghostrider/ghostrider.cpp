@@ -41,6 +41,7 @@
 #include "crypto/cn/CnCtx.h"
 #include "crypto/common/AlgoCtx.h"
 #include "crypto/common/VirtualMemory.h"
+#include "crypto/common/AlgoVariant.h"
 
 #include <thread>
 #include <atomic>
@@ -123,8 +124,8 @@ static constexpr size_t cn_sizes[6] = {
     Algorithm::l3(Algorithm::CN_GR_5) / 2, // 128 KB
 };
 
-static constexpr CnHash::AlgoVariant av_hw_aes[5] = { CnHash::AV_SINGLE, CnHash::AV_SINGLE, CnHash::AV_DOUBLE, CnHash::AV_TRIPLE, CnHash::AV_QUAD };
-static constexpr CnHash::AlgoVariant av_soft_aes[5] = { CnHash::AV_SINGLE_SOFT, CnHash::AV_SINGLE_SOFT, CnHash::AV_DOUBLE_SOFT, CnHash::AV_TRIPLE_SOFT, CnHash::AV_QUAD_SOFT };
+static constexpr AV::AlgoVariant av_hw_aes[5] = { AV::AV_SINGLE, AV::AV_SINGLE, AV::AV_DOUBLE, AV::AV_TRIPLE, AV::AV_QUAD };
+static constexpr AV::AlgoVariant av_soft_aes[5] = { AV::AV_SINGLE_SOFT, AV::AV_SINGLE_SOFT, AV::AV_DOUBLE_SOFT, AV::AV_TRIPLE_SOFT, AV::AV_QUAD_SOFT };
 
 template<size_t N>
 static inline void select_indices(uint32_t (&indices)[N], const uint8_t* seed)
@@ -331,7 +332,7 @@ void benchmark()
         algo_l3_ctx* ctx[8];
         CnCtx::create(ctx, memory->scratchpad(), N, 8);
 
-        const CnHash::AlgoVariant* av = Cpu::info()->hasAES() ? av_hw_aes : av_soft_aes;
+        const AV::AlgoVariant* av = Cpu::info()->hasAES() ? av_hw_aes : av_soft_aes;
 
         uint8_t buf[80];
         uint8_t hash[32 * 8];
@@ -582,7 +583,7 @@ void hash_octa(const uint8_t* data, size_t size, uint8_t* output, algo_l3_ctx** 
         }
     }
 
-    const CnHash::AlgoVariant* av = Cpu::info()->hasAES() ? av_hw_aes : av_soft_aes;
+    const AV::AlgoVariant* av = Cpu::info()->hasAES() ? av_hw_aes : av_soft_aes;
     const AlgoTune* tune = (helper && helper->m_is8MB) ? tune8MB : tuneDefault;
 
     uint8_t tmp[64 * N];
@@ -823,7 +824,7 @@ void hash_octa(const uint8_t* data, size_t size, uint8_t* output, algo_l3_ctx** 
         }
     }
 
-    const CnHash::AlgoVariant* av = Cpu::info()->hasAES() ? av_hw_aes : av_soft_aes;
+    const AV::AlgoVariant* av = Cpu::info()->hasAES() ? av_hw_aes : av_soft_aes;
 
     uint8_t tmp[64 * N];
 

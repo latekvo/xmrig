@@ -22,7 +22,8 @@
 #include "base/net/stratum/Pool.h"
 #include "base/net/stratum/Pools.h"
 #include "core/config/Config.h"
-#include "crypto/cn/CnHash.h"
+#include "crypto/cn/CnHash.h" // TODO: Disable?
+#include "crypto/common/AlgoVariant.h"
 
 
 #ifdef XMRIG_ALGO_RANDOMX
@@ -49,24 +50,24 @@ static const char *kThreads     = "threads";
 static inline uint64_t intensity(uint64_t av)
 {
     switch (av) {
-    case CnHash::AV_SINGLE:
-    case CnHash::AV_SINGLE_SOFT:
+    case AV::AV_SINGLE:
+    case AV::AV_SINGLE_SOFT:
         return 1;
 
-    case CnHash::AV_DOUBLE_SOFT:
-    case CnHash::AV_DOUBLE:
+    case AV::AV_DOUBLE_SOFT:
+    case AV::AV_DOUBLE:
         return 2;
 
-    case CnHash::AV_TRIPLE_SOFT:
-    case CnHash::AV_TRIPLE:
+    case AV::AV_TRIPLE_SOFT:
+    case AV::AV_TRIPLE:
         return 3;
 
-    case CnHash::AV_QUAD_SOFT:
-    case CnHash::AV_QUAD:
+    case AV::AV_QUAD_SOFT:
+    case AV::AV_QUAD:
         return 4;
 
-    case CnHash::AV_PENTA_SOFT:
-    case CnHash::AV_PENTA:
+    case AV::AV_PENTA_SOFT:
+    case AV::AV_PENTA:
         return 5;
 
     default:
@@ -79,7 +80,7 @@ static inline uint64_t intensity(uint64_t av)
 
 static inline bool isHwAes(uint64_t av)
 {
-    return av == CnHash::AV_SINGLE || av == CnHash::AV_DOUBLE || (av > CnHash::AV_DOUBLE_SOFT && av < CnHash::AV_TRIPLE_SOFT);
+    return av == AV::AV_SINGLE || av == AV::AV_DOUBLE || (av > AV::AV_DOUBLE_SOFT && av < AV::AV_TRIPLE_SOFT);
 }
 
 

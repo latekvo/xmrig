@@ -26,6 +26,7 @@
 #include "base/tools/Object.h"
 #include "net/JobResult.h"
 #include "crypto/common/AlgoCtx.h"
+#include "crypto/common/AlgoVariant.h"
 
 
 #ifdef XMRIG_ALGO_RANDOMX
@@ -94,10 +95,7 @@ private:
     const bool m_hwAES;
     const bool m_yield;
 
-    // fixme: AlgoVariant **might** be required for non-cn algorithms
-#   ifdef XMRIG_ALGO_CN
-    const CnHash::AlgoVariant m_av;
-#   endif
+    const AV::AlgoVariant m_av;
 
     const Miner *m_miner;
     const size_t m_threads;

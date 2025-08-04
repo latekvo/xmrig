@@ -32,6 +32,7 @@
 #include "net/interfaces/IJobResultListener.h"
 #include "net/JobResult.h"
 #include "crypto/common/AlgoCtx.h"
+#include "crypto/common/AlgoVariant.h"
 
 
 #ifdef XMRIG_ALGO_RANDOMX
@@ -46,7 +47,7 @@
 #   include "crypto/kawpow/KPHash.h"
 #endif
 
-
+// TODO: Test CN disabled with all other flags enabled
 #if defined(XMRIG_FEATURE_OPENCL) || defined(XMRIG_FEATURE_CUDA)
 #   include "base/tools/Baton.h"
 #   include "crypto/cn/CnCtx.h"
@@ -184,7 +185,7 @@ static void getResults(JobBundle &bundle, std::vector<JobResult> &results, uint3
         for (uint32_t nonce : bundle.nonces) {
             *bundle.job.nonce() = nonce;
 
-            CnHash::fn(algorithm, hwAES ? CnHash::AV_SINGLE : CnHash::AV_SINGLE_SOFT, Assembly::NONE)(bundle.job.blob(), bundle.job.size(), hash, ctx, bundle.job.height());
+            CnHash::fn(algorithm, hwAES ? AV::AV_SINGLE : AV::AV_SINGLE_SOFT, Assembly::NONE)(bundle.job.blob(), bundle.job.size(), hash, ctx, bundle.job.height());
 
             checkHash(bundle, results, nonce, hash, errors);
         }

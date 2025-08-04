@@ -29,6 +29,7 @@
 #include "crypto/cn/CnAlgo.h"
 #include "crypto/common/Assembly.h"
 #include "crypto/common/AlgoCtx.h"
+#include "crypto/common/AlgoVariant.h"
 
 
 struct algo_l3_ctx;
@@ -44,25 +45,10 @@ using cn_mainloop_fun = void (*)(algo_l3_ctx **);
 class CnHash
 {
 public:
-    enum AlgoVariant {
-        AV_AUTO,        // --av=0 Automatic mode.
-        AV_SINGLE,      // --av=1  Single hash mode
-        AV_DOUBLE,      // --av=2  Double hash mode
-        AV_SINGLE_SOFT, // --av=3  Single hash mode (Software AES)
-        AV_DOUBLE_SOFT, // --av=4  Double hash mode (Software AES)
-        AV_TRIPLE,      // --av=5  Triple hash mode
-        AV_QUAD,        // --av=6  Quard hash mode
-        AV_PENTA,       // --av=7  Penta hash mode
-        AV_TRIPLE_SOFT, // --av=8  Triple hash mode (Software AES)
-        AV_QUAD_SOFT,   // --av=9  Quard hash mode  (Software AES)
-        AV_PENTA_SOFT,  // --av=10 Penta hash mode  (Software AES)
-        AV_MAX
-    };
-
     CnHash();
     virtual ~CnHash();
 
-    static cn_hash_fun fn(const Algorithm &algorithm, AlgoVariant av, Assembly::Id assembly);
+    static cn_hash_fun fn(const Algorithm &algorithm, AV::AlgoVariant av, Assembly::Id assembly);
 
 private:
     struct cn_hash_fun_array {
