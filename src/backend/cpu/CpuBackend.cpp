@@ -452,9 +452,10 @@ rapidjson::Value xmrig::CpuBackend::toJSON(rapidjson::Document &doc) const
         Value thread(kObjectType);
         thread.AddMember("intensity",   data.intensity, allocator);
         thread.AddMember("affinity",    data.affinity, allocator);
-        thread.AddMember("av",          data.av(), allocator);
         thread.AddMember("hashrate",    hashrate()->toJSON(i, doc), allocator);
-
+#       ifdef XMRIG_ALGO_CN
+        thread.AddMember("av",          data.av(), allocator);
+#       endif
         i++;
         threads.PushBack(thread, allocator);
     }
